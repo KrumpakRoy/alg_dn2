@@ -24,7 +24,7 @@ def read_graph_from_file(file_path):
             # Add edges in both directions (undirected graph)
             adjacency_list[u].append(v)
             adjacency_list[v].append(u)
-            
+    #print("coordinates in bfs:",coordinates)
     return n, m, k, s, t, coordinates, adjacency_list
 
 def calculate_distance(coord1, coord2):
@@ -43,7 +43,7 @@ def bfs_shortest_path(adjacency_list, coordinates, start, end, n):
     queue = deque([(start, [start], 0)])  # (current_node, path_so_far, path_length)
     visited[start] = True
     visited_count = 1
-    
+    #print( coordinates)
     while queue:
         current, path, length = queue.popleft()
         
@@ -56,6 +56,7 @@ def bfs_shortest_path(adjacency_list, coordinates, start, end, n):
                 visited_count += 1
                 
                 # Calculate distance between current node and neighbor
+                #print(neighbor)
                 edge_length = calculate_distance(coordinates[current], coordinates[neighbor])
                 
                 # Add neighbor to queue with updated path and length
@@ -82,7 +83,7 @@ def main():
     
     # Output results
     print(visited_count)
-    print(f"{path_length:.6f}")
+    print(f"{path_length}")
     print(" ".join(map(str, path)))
 
 if __name__ == "__main__":

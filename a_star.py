@@ -16,7 +16,7 @@ def euclidean_distance(x1, y1, x2, y2, k=2):
 	#  k  >=  :  Minkowski distance
 	return (abs(dx) ** k + abs(dy) ** k) ** (1.0 / k)
 
-def a_star_search(graph, node_coords, start, goal):
+def a_star_search(graph, node_coords, start, goal,k):
 	"""
 	A* search algorithm to find shortest path between start and goal nodes.
 
@@ -40,7 +40,7 @@ def a_star_search(graph, node_coords, start, goal):
 
 	# Initialize f_score (estimated total cost from start to goal through current node)
 	f_score = {node: float('inf') for node in graph}
-	f_score[start] = euclidean_distance(*node_coords[start], *node_coords[goal])
+	f_score[start] = euclidean_distance(*node_coords[start], *node_coords[goal],k)
 
 	# For reconstructing the path
 	came_from = {}
@@ -71,7 +71,7 @@ def a_star_search(graph, node_coords, start, goal):
 				current = came_from[current]
 			path.append(start)
 			path.reverse()
-			return path, total_cost, len(visited_nodes)
+			return len(visited_nodes), total_cost,path
 		
 		# Explore neighbors
 		for neighbor in graph[current]:
@@ -93,7 +93,7 @@ def a_star_search(graph, node_coords, start, goal):
 					open_set_hash.add(neighbor)
 
 	# No path found
-	return None, float('inf'), len(visited_nodes)
+	return len(visited_nodes),float('inf'), None
 
 def read_graph_from_file(file_path):
 	"""
@@ -139,7 +139,7 @@ def main():
 	try:
 		n, m, k, start, goal, node_coords, graph = read_graph_from_file(file_path)
 		
-		path, total_cost, visited_count = a_star_search(graph, node_coords, start, goal)
+		visited_count, total_cost, path= a_star_search(graph, node_coords, start, goal,k)
 		
 		if path:
 			# Line 1: Number of visited nodes

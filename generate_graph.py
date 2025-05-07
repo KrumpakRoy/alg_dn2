@@ -49,7 +49,7 @@ def visualize_graph(nodes, edges):
 	for edge in edges:
 		u = edge[0]
 		v = edge[1]
-		plt.plot([x[u], x[v]], [y[u], y[v]], 'k-', alpha=0.6)
+		plt.plot([x[u-1], x[v-1]], [y[u-1], y[v-1]], 'k-', alpha=0.6)
 
 	# Add node labels
 	for i, (node_x, node_y) in enumerate(nodes):
@@ -65,45 +65,52 @@ def create_graph(number_of_fully_connected_subgraphs, number_of_all_nodes):
 	edges = []
 	nodes = []
 	subgraph_size = number_of_all_nodes // number_of_fully_connected_subgraphs
-	for i in range(number_of_fully_connected_subgraphs):
-		subgraph_edges = make_fully_connected_edge_list(subgraph_size, i * subgraph_size)
-		subgraph_nodes = make_fully_connected_graph_nodes(subgraph_size, -100, 100, -100, 100, i * 500)
+	for i in range(1,number_of_fully_connected_subgraphs+1):
+		subgraph_edges = make_fully_connected_edge_list(subgraph_size, (i-1) * subgraph_size+1)
+		subgraph_nodes = make_fully_connected_graph_nodes(subgraph_size, -100, 100, -100, 100, (i-1) * 500)
 		edges.extend(subgraph_edges)
 		nodes.extend(subgraph_nodes)
 
 	# Connect the last node of the previous subgraph to the first node of the next subgraph
-	for i in range(0,number_of_fully_connected_subgraphs - 1):
-		edges.append(((i + 1) * subgraph_size - 1, (i + 1) * subgraph_size))
+	for i in range(1,number_of_fully_connected_subgraphs):
+		edges.append((i* subgraph_size, i * subgraph_size+1))
 	return nodes, edges
 
+
+def get_graph(total_number_of_nodes, number_of_subgraphs):
+	size_of_subgraph = total_number_of_nodes // number_of_subgraphs
+	total_number_of_nodes = size_of_subgraph * number_of_subgraphs
+	nodes, edges = create_graph(number_of_subgraphs, total_number_of_nodes)
+
+
+	s = [-10000, 0]
+	m = [10000, 0]
+	t = [10000, 10000]
+	nodes.append(m)
+	nodes.append(s)
+	nodes.append(t)
+
+	random_in_node =  random.randint((number_of_subgraphs-1)*size_of_subgraph+1,total_number_of_nodes+1)
+
+	edge_m_graph = (total_number_of_nodes+1,random_in_node)
+	edge_s_graph = (total_number_of_nodes+2, 1)
+	edge_m_t = (total_number_of_nodes+1, total_number_of_nodes+3)
+	edges.append(edge_m_graph)
+	edges.append(edge_s_graph)
+	edges.append(edge_m_t)
+
+
+	#visualize_graph(nodes, edges)
+	with open(f'test_graph_{number_of_subgraphs}_subgraphs_{total_number_of_nodes}.txt', 'w') as f:
+		f.write(f"{total_number_of_nodes+3} {len(edges)} 2 {total_number_of_nodes+2} {total_number_of_nodes+3}\n")
+		for i, node in enumerate(nodes):
+			f.write(f"{i+1} {node[0]} {node[1]}\n")
+		for edge in edges:
+			f.write(f"{edge[0]} {edge[1]}\n")
+
+	#visualize_graph(nodes, edges)
+	return nodes, edges, total_number_of_nodes+2, total_number_of_nodes+3
+
 total_number_of_nodes = 40
-number_of_subgraphs = 1
-size_of_subgraph = total_number_of_nodes // number_of_subgraphs
-
-nodes, edges = create_graph(number_of_subgraphs, total_number_of_nodes)
-
-
-s = (-10000, 0)
-m = (10000, 0)
-t = (10000, 10000)
-nodes.append(m)
-nodes.append(s)
-nodes.append(t)
-
-random_in_node =  random.randint((number_of_subgraphs-1)*size_of_subgraph,total_number_of_nodes)
-
-edge_m_graph = (total_number_of_nodes,random_in_node)
-edge_s_graph = (total_number_of_nodes+1, 0)
-edge_m_t = (total_number_of_nodes, total_number_of_nodes+2)
-edges.append(edge_m_graph)
-edges.append(edge_s_graph)
-edges.append(edge_m_t)
-
-
-#visualize_graph(nodes, edges)
-with open(f'test_graph_{number_of_subgraphs}_subgraphs_{total_number_of_nodes}.txt', 'w') as f:
-	f.write(f"{total_number_of_nodes+3} {len(edges)} 2 {total_number_of_nodes+2} {total_number_of_nodes+3}\n")
-	for i, node in enumerate(nodes):
-		f.write(f"{i+1} {node[0]} {node[1]}\n")
-	for edge in edges:
-		f.write(f"{edge[0]+1} {edge[1]+1}\n")
+number_of_subgraphs = 2
+get_graph(total_number_of_nodes, number_of_subgraphs)

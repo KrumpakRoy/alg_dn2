@@ -219,7 +219,7 @@ def read_graph_from_file(file_path):
     return n, m, k, s, t, nodes, edges
 
 
-def build_adjacency_list(n, edges, nodes):
+def build_adjacency_list(n, edges):
     """Build an adjacency list representation of the graph without calculating weights upfront."""
     graph = {i: [] for i in range(1, n + 1)}
     
@@ -284,7 +284,7 @@ def shortest_path_dijkstra_fibonacci(graph, source, target, nodes):
     # Calculate total distance
     total_distance = distances[target]
     
-    return path, total_distance, visited
+    return len(visited),total_distance,path
 
 
 def main():
@@ -296,14 +296,14 @@ def main():
     n, m, k, s, t, nodes, edges = read_graph_from_file(file_path)
     
     # Build the graph
-    graph = build_adjacency_list(n, edges, nodes)
+    graph = build_adjacency_list(n, edges)
     
     # Find the shortest path
-    path, distance, visited = shortest_path_dijkstra_fibonacci(graph, s, t, nodes)
+    visited, distance,path = shortest_path_dijkstra_fibonacci(graph, s, t, nodes)
     
     # Output the results
-    print(len(visited))  # Number of visited nodes
-    print(f"{distance:.6f}")  # Length of the walk (with 6 decimal places)
+    print(visited)  # Number of visited nodes
+    print(f"{distance}")  # Length of the walk (with 6 decimal places)
     print(" ".join(map(str, path)))  # The path itself
     
 
