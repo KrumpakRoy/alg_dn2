@@ -7,3 +7,4 @@
 /test_graph_*_subgraph*5*00.txt
 /test_graph_*.txt
 *.csv
+*fibonacci*

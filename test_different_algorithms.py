@@ -17,8 +17,8 @@ def time_function(function, *arguments):
 	#print(f"elapsed time: {execution_time:.2} seconds")
 	return number_of_visited_nodes, path_length, path, execution_time
 
-max_number_of_subgraphs = 4
-range_number_of_nodes = np.ceil(np.logspace(1,2,20))
+max_number_of_subgraphs = 10
+range_number_of_nodes = np.ceil(np.logspace(1,4,20))
 
 the_best = pd.DataFrame(data=[],columns =range_number_of_nodes)
 functions = [a_star_search, dijkstra, bfs_shortest_path, shortest_path_dijkstra_fibonacci]
@@ -42,6 +42,7 @@ for number_of_subgraphs in range(1, max_number_of_subgraphs):
 		try: 
 			assert path_length == dijkstra_results[1][t] and path == dijkstra_path
 		except:
+			print("dijkstra wrong")
 			print(num_visited, path_length, path)
 			print(dijkstra_results[0], dijkstra_results[1][t], dijkstra_path)
 
@@ -50,6 +51,7 @@ for number_of_subgraphs in range(1, max_number_of_subgraphs):
 		try: 
 			assert path_length == bfs_results[1] and path == bfs_results[2]
 		except:
+			print("BFS wrong")
 			print(num_visited, path_length, path)
 			print(bfs_results)
 
@@ -59,6 +61,7 @@ for number_of_subgraphs in range(1, max_number_of_subgraphs):
 		try: 
 			assert path_length == fib_results[1] and path == fib_results[2]
 		except:
+			print("fibonacci heap wrong")
 			print(num_visited, path_length, path)
 			print(fib_results)
 
@@ -66,5 +69,5 @@ for number_of_subgraphs in range(1, max_number_of_subgraphs):
 	
 	the_best = pd.concat([the_best, row_best], axis = 0)
 
-the_best.to_csv("the_best_option.csv")
+#the_best.to_csv("the_best_option.csv")
 print(dict(zip(*np.unique(the_best, return_counts=True))))

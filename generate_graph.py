@@ -101,16 +101,16 @@ def get_graph(total_number_of_nodes, number_of_subgraphs):
 
 
 	#visualize_graph(nodes, edges)
-	with open(f'test_graph_{number_of_subgraphs}_subgraphs_{total_number_of_nodes}.txt', 'w') as f:
-		f.write(f"{total_number_of_nodes+3} {len(edges)} 2 {total_number_of_nodes+2} {total_number_of_nodes+3}\n")
-		for i, node in enumerate(nodes):
-			f.write(f"{i+1} {node[0]} {node[1]}\n")
-		for edge in edges:
-			f.write(f"{edge[0]} {edge[1]}\n")
+	#with open(f'test_graph_{number_of_subgraphs}_subgraphs_{total_number_of_nodes}.txt', 'w') as f:
+	#	f.write(f"{total_number_of_nodes+3} {len(edges)} 2 {total_number_of_nodes+2} {total_number_of_nodes+3}\n")
+	#	for i, node in enumerate(nodes):
+	#		f.write(f"{i+1} {node[0]} {node[1]}\n")
+	#	for edge in edges:
+	#		f.write(f"{edge[0]} {edge[1]}\n")
 
 	#visualize_graph(nodes, edges)
 	return nodes, edges, total_number_of_nodes+2, total_number_of_nodes+3
 
-total_number_of_nodes = 40
-number_of_subgraphs = 2
+total_number_of_nodes = 100
+number_of_subgraphs = 5
 get_graph(total_number_of_nodes, number_of_subgraphs)
