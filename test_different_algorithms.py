@@ -10,11 +10,11 @@ import pandas as pd
 def time_function(function, *arguments):
 	start_time = time.time()
 	number_of_visited_nodes, path_length, path = function(*arguments)
-	#print(number_of_visited_nodes)
+	print(number_of_visited_nodes)
 	#print(path_length)
 	#print(path)
 	execution_time = time.time()-start_time
-	#print(f"elapsed time: {execution_time:.2} seconds")
+	print(f"elapsed time: {execution_time:.2} seconds")
 	return number_of_visited_nodes, path_length, path, execution_time
 
 max_number_of_subgraphs = 10
@@ -29,7 +29,8 @@ for number_of_subgraphs in range(1, max_number_of_subgraphs):
 		k = 2
 		number_of_nodes = int(number_of_nodes)
 		nodes, edges, s, t = get_graph(number_of_nodes, number_of_subgraphs)
-		#print(nodes)
+		
+		#print(len(nodes))
 		adjacency_list = build_adjacency_list(len(nodes), edges)
 		nodes_dict = {i+1: node for i, node in enumerate(nodes)}
 		
@@ -47,7 +48,7 @@ for number_of_subgraphs in range(1, max_number_of_subgraphs):
 			print(dijkstra_results[0], dijkstra_results[1][t], dijkstra_path)
 
 		#print("coordinates in tests:",[].extend(nodes))
-		bfs_results = time_function(functions[2], adjacency_list, nodes_dict, s, t, len(nodes))
+		bfs_results = time_function(functions[2], adjacency_list, nodes_dict, s, t, len(nodes),k)
 		try: 
 			assert path_length == bfs_results[1] and path == bfs_results[2]
 		except:
@@ -56,7 +57,7 @@ for number_of_subgraphs in range(1, max_number_of_subgraphs):
 			print(bfs_results)
 
 
-		fib_results = time_function(functions[3], adjacency_list, s,t, nodes_dict)
+		fib_results = time_function(functions[3], adjacency_list, s,t, nodes_dict,k)
 		#print("sakdfjasjd",fib_results)
 		try: 
 			assert path_length == fib_results[1] and path == fib_results[2]

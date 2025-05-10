@@ -3,6 +3,7 @@ import networkx as nx
 from itertools import combinations
 import numpy as np
 import matplotlib.pyplot as plt
+from dijkstra import read_graph
 
 def make_fully_connected_edge_list(number_of_nodes, number_of_already_created_nodes=0):
 	"""
@@ -58,6 +59,7 @@ def visualize_graph(nodes, edges):
 	plt.grid(True)
 	plt.axis('equal')
 	plt.show()
+
 def create_graph(number_of_fully_connected_subgraphs, number_of_all_nodes):
 	"""
 	Create a graph of fully connected subgraphs, connected by a single edge.
@@ -77,7 +79,7 @@ def create_graph(number_of_fully_connected_subgraphs, number_of_all_nodes):
 	return nodes, edges
 
 
-def get_graph(total_number_of_nodes, number_of_subgraphs):
+def get_graph(total_number_of_nodes, number_of_subgraphs,visualize=False, save=False,k=2):
 	size_of_subgraph = total_number_of_nodes // number_of_subgraphs
 	total_number_of_nodes = size_of_subgraph * number_of_subgraphs
 	nodes, edges = create_graph(number_of_subgraphs, total_number_of_nodes)
@@ -100,17 +102,24 @@ def get_graph(total_number_of_nodes, number_of_subgraphs):
 	edges.append(edge_m_t)
 
 
-	#visualize_graph(nodes, edges)
-	#with open(f'test_graph_{number_of_subgraphs}_subgraphs_{total_number_of_nodes}.txt', 'w') as f:
-	#	f.write(f"{total_number_of_nodes+3} {len(edges)} 2 {total_number_of_nodes+2} {total_number_of_nodes+3}\n")
-	#	for i, node in enumerate(nodes):
-	#		f.write(f"{i+1} {node[0]} {node[1]}\n")
-	#	for edge in edges:
-	#		f.write(f"{edge[0]} {edge[1]}\n")
+	if(visualize):
+		visualize_graph(nodes, edges)
+	if(save):
+		with open(f'test_graph_{number_of_subgraphs}_subgraphs_{total_number_of_nodes}.txt', 'w') as f:
+			f.write(f"{total_number_of_nodes+3} {len(edges)} {k} {total_number_of_nodes+2} {total_number_of_nodes+3}\n")
+			for i, node in enumerate(nodes):
+				f.write(f"{i+1} {node[0]} {node[1]}\n")
+			for edge in edges:
+				f.write(f"{edge[0]} {edge[1]}\n")
 
 	#visualize_graph(nodes, edges)
 	return nodes, edges, total_number_of_nodes+2, total_number_of_nodes+3
 
-total_number_of_nodes = 100
-number_of_subgraphs = 5
-get_graph(total_number_of_nodes, number_of_subgraphs)
+total_number_of_nodes = 10000
+number_of_subgraphs = 1
+k=4
+get_graph(total_number_of_nodes, number_of_subgraphs,k=k,save=True)
+
+#n,m,k,s,t,nodes,edges = read_graph("inst5_flower.txt")
+#print(len(nodes))
+#visualize_graph(nodes.values(),edges)

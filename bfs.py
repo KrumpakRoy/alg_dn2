@@ -27,13 +27,26 @@ def read_graph_from_file(file_path):
     #print("coordinates in bfs:",coordinates)
     return n, m, k, s, t, coordinates, adjacency_list
 
-def calculate_distance(coord1, coord2):
-    """Calculate Euclidean distance between two coordinates."""
-    x1, y1 = coord1
-    x2, y2 = coord2
-    return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+def calculate_distance(u_coords, v_coords, k):
+    """
+    Calculate the distance between two nodes based on the k value.
+    
+    :param u_coords: Coordinates of node u (x, y)
+    :param v_coords: Coordinates of node v (x, y)
+    :param k: Value of k for the distance metric
+    :return: Distance between nodes u and v
+    """
+    xu, yu = u_coords
+    xv, yv = v_coords
+    
+    if k == 0:
+        return 1
+    elif k == -1:
+        return max(abs(xu - xv), abs(yu - yv))
+    else:
+        return (abs(xu - xv) ** k + abs(yu - yv) ** k) ** (1 / k)
 
-def bfs_shortest_path(adjacency_list, coordinates, start, end, n):
+def bfs_shortest_path(adjacency_list, coordinates, start, end, n,k):
     """
     Find shortest path using BFS.
     Returns number of visited nodes, total path length, and the path itself.
@@ -57,7 +70,7 @@ def bfs_shortest_path(adjacency_list, coordinates, start, end, n):
                 
                 # Calculate distance between current node and neighbor
                 #print(neighbor)
-                edge_length = calculate_distance(coordinates[current], coordinates[neighbor])
+                edge_length = calculate_distance(coordinates[current], coordinates[neighbor],k)
                 
                 # Add neighbor to queue with updated path and length
                 new_path = path + [neighbor]
