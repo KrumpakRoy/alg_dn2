@@ -27,7 +27,8 @@ print(graph_paths)
 print(len(graph_paths))
 
 
-py_files = ["first_implementations/1.py"]+[f"first_implementations/{x}.py" for x in range(3,25)]
+#py_files = ["first_implementations/1.py"]+[f"first_implementations/{x}.py" for x in range(3,25)]
+py_files = ["final.py"]
 times = pd.DataFrame(data =[], columns=py_files+["graph"])
 
 absolute_start_time = time.time()
@@ -49,13 +50,13 @@ for i,graph in enumerate(graph_paths):
 		print(f"Time: {elapsed:.2f} seconds")
 
 absolute_end_time=time.time()
-times.to_csv("test_graphs_from_all_teams.csv")
+times.to_csv("test_graphs_final_iteration2.csv")
 print(f"Elapsed time: {absolute_end_time-absolute_start_time:.2} sec")
 times_without_graph_names = times.drop(columns=['graph'],inplace=False)
 average_time = times_without_graph_names.mean(axis=1)
 times['average_graph_time'] = average_time
 times = times.sort_values(by='average_graph_time', ascending=False).reset_index(drop=True)
-times.to_csv("test_graphs_from_all_teams_sorted.csv")
+times.to_csv("test_graphs_final_iteration2_sorted.csv")
 #test_times - prvi pogon vseh testov, kjer so nekatere implementacije še vedno napačno delale
 #test_times2 - popravljene implementacije, ki niso delale, sprememba grafov, da se dajo stisniti v 50MB
 #test_times3 - sprememba zadnjega grafa (9600), tako da ima k = 42

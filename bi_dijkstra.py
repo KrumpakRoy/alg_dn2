@@ -1,6 +1,7 @@
 import heapq
 from collections import defaultdict, deque
 import queue
+#from generate_graph import visualize_graph
 def calculate_distance(u_coords, v_coords, k):
 	"""
 	Calculate the distance between two nodes based on the k value.
@@ -40,7 +41,7 @@ def get_path(previous_forward, previous_backward, meeting_node):
 	
 	return full_path
 
-def bi_dijkstra(graph, s, t, nodes, k):
+def bi_dijkstra(graph, s, t):
 	#initialize best shortest paths to nodes
 	#from bakcward and forward direction
 	distances_forward = defaultdict(lambda: float("inf"))
@@ -96,10 +97,59 @@ def bi_dijkstra(graph, s, t, nodes, k):
 		if distances_forward[u] + distances_backward[v] >= best_path:
 			path = get_path(previous_nodes_forward, previous_nodes_backward, best_meeting_point)
 			return visited, best_path, path
-	print("There was an error (one queue is empty while the other is not). This might happen if the graph is not connected? ... or maybe some other reason, it would be best to first check if the graph is connected.")
+	#print("There was an error (one queue is empty while the other is not). This might happen if the graph is not connected? ... or maybe some other reason, it would be best to first check if the graph is connected.")
+	return visited, best_path, get_path(previous_nodes_forward, previous_nodes_backward, best_meeting_point)
+
+def read_graph(graph_path):
+    """
+    Read and parse graph data from the file.
+    
+    :param graph_path: Path to the file containing the graph data
+    :return: Tuple of (n, m, k, s, t, nodes, edges)
+    """
+    with open(graph_path, 'r') as file:
+        lines = file.readlines()
+    
+    # Parse the first line to get n, m, k, s, t
+    n, m, k, s, t = map(int, lines[0].split())
+    
+    # Parse the nodes
+    nodes = {}
+    for i in range(1, n + 1):
+        node_id, x, y = map(float, lines[i].split())
+        nodes[node_id] = (x, y)
+    
+    # Parse the edges
+    edges = []
+    for i in range(n + 1, n + m + 1):
+        u, v = map(int, lines[i].split())
+        edges.append((u, v))
+    
+    return n, m, k, s, t, nodes, edges
+
+def build_graph(nodes, edges, k):
+    """
+    Build the graph as an adjacency list with calculated distances.
+    
+    :param nodes: Dictionary of nodes with their coordinates
+    :param edges: List of edges as (u, v) pairs
+    :param k: Value of k for the distance metric
+    :return: Adjacency list representation of the graph
+    """
+    graph = {node_id: [] for node_id in nodes}
+    
+    for u, v in edges:
+        # Calculate the distance based on the value of k
+        distance = calculate_distance(nodes[u], nodes[v], k)
+        
+        # Add edges in both directions as the graph is undirected
+        graph[u].append((v, distance))
+        graph[v].append((u, distance))
+    
+    return graph
 
 def shortest_path(file_path):
-    # Read and parse the graph file
+    """# Read and parse the graph file
     with open(file_path, 'r') as f:
         lines = f.readlines()
     # Parse the first line
@@ -111,14 +161,19 @@ def shortest_path(file_path):
         nodes[node_id] = (x, y)
     # Build adjacency list with edge weights (Minkowski distance)
     graph = defaultdict(list)
+    edges = []
     for i in range(n + 1, n + 1 + m):
         u, v = map(int, lines[i].strip().split())
         # Calculate Minkowski distance
         distance = calculate_distance(nodes[u], nodes[v],k)
         graph[u].append((v, distance))
         graph[v].append((u, distance))
-    # Run bidirectional Dijkstra
-    visited_count, path_length, path = bi_dijkstra(graph, s, t, nodes, k)
+        edges.append((u,v))
+    # Run bidirectional Dijkstra"""
+    n, m, k, s, t, nodes, edges = read_graph(file_path)
+    graph = build_graph(nodes, edges, k)
+    #visualize_graph(nodes.values(), edges)
+    visited_count, path_length, path = bi_dijkstra(graph, s, t)
     # Output results
     print(visited_count)
     print(f"{path_length:.11f}")

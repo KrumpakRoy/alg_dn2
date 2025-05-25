@@ -120,8 +120,8 @@ def get_graph(total_number_of_nodes, number_of_subgraphs,visualize=False, save=F
 	#visualize_graph(nodes, edges)
 	return nodes, edges, total_number_of_nodes+2, total_number_of_nodes+3
 if(__name__=="__main__"):
-	total_number_of_nodes = 5
-	number_of_subgraphs = 1
+	total_number_of_nodes = 10
+	number_of_subgraphs = 2
 	k=2
 	get_graph(total_number_of_nodes, number_of_subgraphs,k=k,save=True)
 

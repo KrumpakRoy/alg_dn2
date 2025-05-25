@@ -129,6 +129,54 @@ def read_graph_from_file(file_path):
 
 	return n, m, k, s, t, node_coords, graph
 
+def read_graph(graph_path):
+    """
+    Read and parse graph data from the file.
+    
+    :param graph_path: Path to the file containing the graph data
+    :return: Tuple of (n, m, k, s, t, nodes, edges)
+    """
+    with open(graph_path, 'r') as file:
+        lines = file.readlines()
+    
+    # Parse the first line to get n, m, k, s, t
+    n, m, k, s, t = map(int, lines[0].split())
+    
+    # Parse the nodes
+    nodes = {}
+    for i in range(1, n + 1):
+        node_id, x, y = map(float, lines[i].split())
+        nodes[node_id] = (x, y)
+    
+    # Parse the edges
+    edges = []
+    for i in range(n + 1, n + m + 1):
+        u, v = map(int, lines[i].split())
+        edges.append((u, v))
+    
+    return n, m, k, s, t, nodes, edges
+
+def build_graph(nodes, edges, k):
+    """
+    Build the graph as an adjacency list with calculated distances.
+    
+    :param nodes: Dictionary of nodes with their coordinates
+    :param edges: List of edges as (u, v) pairs
+    :param k: Value of k for the distance metric
+    :return: Adjacency list representation of the graph
+    """
+    graph = {node_id: [] for node_id in nodes}
+    
+    for u, v in edges:
+        # Calculate the distance based on the value of k
+        #distance = euclidean_distance(nodes[u][0], nodes[u][1],nodes[v][0], nodes[v][1], k)
+        
+        # Add edges in both directions as the graph is undirected
+        graph[u].append(v)
+        graph[v].append(u)
+    
+    return graph
+
 def main():
 	if len(sys.argv) != 2:
 		print("Usage: python a_star_search.py <input_file_path>")
@@ -136,25 +184,23 @@ def main():
 
 	file_path = sys.argv[1]
 
-	try:
-		n, m, k, start, goal, node_coords, graph = read_graph_from_file(file_path)
+	#n, m, k, s, t, nodes, graph = read_graph_from_file(file_path)
+	n, m, k, s, t, nodes, edges = read_graph(file_path)
+	graph = build_graph(nodes, edges, k)
+	visited_count, total_cost, path= a_star_search(graph, nodes, s, t,k)
+	
+	if path:
+		# Line 1: Number of visited nodes
+		print(visited_count)
 		
-		visited_count, total_cost, path= a_star_search(graph, node_coords, start, goal,k)
+		# Line 2: Euclidean length of the shortest path (total cost)
+		print(total_cost)
 		
-		if path:
-			# Line 1: Number of visited nodes
-			print(visited_count)
+		# Line 3: The shortest path of nodes separated by spaces
+		print(" ".join(map(str, path)))
+	else:
+		print(f"No path found from node {s} to node {t}")
 			
-			# Line 2: Euclidean length of the shortest path (total cost)
-			print(total_cost)
-			
-			# Line 3: The shortest path of nodes separated by spaces
-			print(" ".join(map(str, path)))
-		else:
-			print(f"No path found from node {start} to node {goal}")
-			
-	except Exception as e:
-		print(f"Error: {str(e)}")
 
 if __name__ == "__main__":
 	if len(sys.argv) != 2:
