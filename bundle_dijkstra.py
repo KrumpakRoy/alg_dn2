@@ -5,6 +5,7 @@ from generate_graph import visualize_graph
 import heapq
 from hollow_heap import HollowHeap
 from heapdict import heapdict
+from scipy.spatial import Delaunay
 def read_graph(graph_path):
 	"""
 	Read and parse graph data from the file.
