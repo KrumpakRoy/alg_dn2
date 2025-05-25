@@ -38,13 +38,18 @@ def make_fully_connected_graph_nodes(number_of_nodes,min_x, max_x, min_y, max_y,
 	)).tolist()
 	return nodes
 
-def visualize_graph(nodes, edges):
+def visualize_graph(nodes, edges, R=None):
 	plt.figure(figsize=(10, 8))
 	x = [node[0] for node in nodes]
 	y = [node[1] for node in nodes]
-
-	plt.scatter(x, y, c='blue', s=100)
-
+	if R != None:
+		for node in nodes:
+			if(node in R.values()):
+				plt.scatter(node[0], node[1], c = 'r', s = 500)
+			else:
+				plt.scatter(node[0], node[1], c='blue', s=500)
+	else:
+		plt.scatter(x,y,c='blue', s=500)
 	# Plot edges
 	#print(edges)
 	for edge in edges:
@@ -87,7 +92,7 @@ def get_graph(total_number_of_nodes, number_of_subgraphs,visualize=False, save=F
 
 	s = [-10000, 0]
 	m = [10000, 0]
-	t = [10000, 10000]
+	t = [-10000, -10000]
 	nodes.append(m)
 	nodes.append(s)
 	nodes.append(t)
@@ -114,11 +119,11 @@ def get_graph(total_number_of_nodes, number_of_subgraphs,visualize=False, save=F
 
 	#visualize_graph(nodes, edges)
 	return nodes, edges, total_number_of_nodes+2, total_number_of_nodes+3
-
-total_number_of_nodes = 9600
-number_of_subgraphs = 3
-k=2
-get_graph(total_number_of_nodes, number_of_subgraphs,k=k,save=True)
+if(__name__=="__main__"):
+	total_number_of_nodes = 5
+	number_of_subgraphs = 1
+	k=2
+	get_graph(total_number_of_nodes, number_of_subgraphs,k=k,save=True)
 
 #n,m,k,s,t,nodes,edges = read_graph("inst5_flower.txt")
 #print(len(nodes))
